@@ -10,19 +10,35 @@ import cv2
 import numpy as np
 import theano
 
-# data Pexels medium
-crop_height = 232
-crop_width = 232
+# constant
+# output size for training images, input size will be crop_size // 2
+crop_size = 232
+
+# global variable
+crop_height = crop_size
+crop_width = crop_size
 image_channel_number = 1  # Y only
-input_directory = '../data/medium'
-cropped_directory = '../data/medium-232-cropped'
-half_directory = '../data/medium-116-cropped'
-logfile_name = '../data/medium.log'
+filepath = os.path.dirname(os.path.realpath(__file__))
+input_directory = os.path.join(filepath, '../../data/training_images')
+cropped_directory = os.path.join(filepath, '../../data/training_images-232-cropped')
+half_directory = os.path.join(filepath, '../../data/training_images-116-cropped')
+logfile_name = os.path.join(filepath, '../../data/prepare_data.log')
 
 
 def build_data(image_save_flag=False):
+    if not os.path.exists(input_directory):
+        print(input_directory, ' does not exist! please put training image files in this folder')
+        return
+
     index = 0
     logfile = open(logfile_name, 'w')
+
+    if image_save_flag:
+        if not os.path.exists(cropped_directory):
+            os.makedirs(cropped_directory)
+        if not os.path.exists(half_directory):
+            os.makedirs(half_directory)
+
     for root, dirs, files in os.walk(input_directory):
         # print root, dirs, files
         batch_size = len(files)
@@ -109,7 +125,6 @@ def format_data(dataset):
     np_train_data_y = data_y[:train_index]
     np_valid_data_y = data_y[train_index: valid_index]
     np_test_data_y = data_y[valid_index:]
-
 
     def shared_dataset(data, borrow=True):
         shared_data = theano.shared(np.asarray(data, dtype=theano.config.floatX), borrow=borrow)

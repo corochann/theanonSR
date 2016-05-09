@@ -10,7 +10,7 @@ def preprocess(pre_scaled_x, image_padding=0):
     2. Normalization: normalize each pixel's value from 0~256 to 0~1
     3. Padding: pad edge using np.pad.
                 because image size will reduce during convolution in neural network
-    :param pre_scaled_x:  original input image array
+    :param pre_scaled_x:  original input image (numpy.array)
     :param image_padding: value of pixel to be padded
     :return:
     """

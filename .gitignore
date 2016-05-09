@@ -1,1 +1,3 @@
 .idea/
+*.jpg
+data/prepare_data.log
