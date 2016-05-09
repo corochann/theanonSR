@@ -1,8 +1,6 @@
 """ Training SRCNN
 SRCNN: Super-Resolution Convolutional Neural Network
 """
-
-
 from __future__ import print_function
 
 try:
@@ -20,17 +18,15 @@ import numpy as np
 
 import theano
 import theano.tensor as T
-from theano.ifelse import ifelse
-from theano.tensor.nnet import conv2d
 
 from tools.prepare_data import load_data
 from tools.image_processing import preprocess
-from srcnn import predict_test_set
 
 # from mlp import HiddenLayer
 from layer import ConvLayer
 
-model_name = '3x3x3_1x3x3'
+#model_name = '3x3x3_1x3x3'
+model_name = '16x3x3_32x3x3_32x3x3_64x3x3_1x3x3'
 # model_name = '32x3x3_32x3x3_32x3x3_1x3x3'
 
 # Model
@@ -40,7 +36,7 @@ training_model_folder = os.path.join(filepath, '../model/', model_name)
 training_process_folder = os.path.join(training_model_folder, 'training_process')
 train_log_file_name = 'train.log'
 
-def execute_srcnn(n_epochs=10000,
+def execute_srcnn(n_epochs=40000,
                   image_height=232,
                   image_width=232,
                   resume=False):
@@ -357,6 +353,103 @@ def execute_srcnn(n_epochs=10000,
            os.path.split(__file__)[1] +
            ' ran for %.2fm' % ((end_time - start_time) / 60.)),
           file=train_log_file)
+
+
+def predict_test_set(image_height=232,
+                     image_width=232,
+                     model_folder=training_model_folder):
+    print('predict...')
+    if not os.path.exists(model_folder):
+        print('os.getcwd() ', os.getcwd())
+        print(model_folder + ' does not exist!')
+        return
+
+    training_process_folder = os.path.join(model_folder, 'training_process')
+    f = open(os.path.join(model_folder, 'train.json'), 'r')
+    model_data = json.load(f)
+
+    rng = np.random.RandomState(model_data["rng_seed"])
+    input_channel_number = model_data["input_channel"]
+    layer_count = model_data["layer_count"]
+    batch_size = model_data["minibatch_size"]
+    layers = model_data["layers"]
+
+    image_padding = 0
+    for i in np.arange(layer_count):
+        # currently it only supports filter height == filter width
+        assert layers[i]["filter_height"] == layers[i]["filter_width"], "filter height and filter width must be same!"
+        assert layers[i]["filter_height"] % 2 == 1, "Only odd number filter is supported!"
+        image_padding += layers[i]["filter_height"] - 1
+
+    total_image_padding = image_padding
+
+    index = T.lscalar()  # index to a minibatch
+    x = T.tensor4(name='x')  # input data (rasterized images): (batch_size, ch, image_height, image_width)
+    y = T.tensor4(name='y')  # output data (rasterized images): (batch_size, ch, image_height, image_width)
+    layer0_input = x # x.reshape((batch_size, input_channel_number, image_height, image_width))  # shape(batch_size, #of feature map, image height, image width)
+
+    param_lists = pickle.load(open(os.path.join(model_folder, 'best_model.pkl')))
+    #print('param_lists', param_lists)
+    #print('param_lists1', param_lists[1])
+    ConvLayers = []
+
+    for i in np.arange(layer_count):
+        if i == 0:
+            previous_layer_channel = input_channel_number
+            layer_input = layer0_input
+        else:
+            previous_layer_channel = layers[i-1]["channel"]
+            layer_input = ConvLayers[-1].output
+
+        layer = ConvLayer(
+            rng,
+            input=layer_input,
+            image_shape=(batch_size, previous_layer_channel, image_height + image_padding, image_width + image_padding),
+            filter_shape=(layers[i]["channel"], previous_layer_channel, layers[i]["filter_height"], layers[i]["filter_width"]),
+            W_values=param_lists[i][0],
+            b_values=param_lists[i][1]
+        )
+        #print('layer.W', layer.W, layer.W.get_value())
+        #print('layer.b', layer.b, layer.b.get_value())
+        ConvLayers.append(layer)
+
+    #print('ConvLayers', ConvLayers)
+    # crete train model
+    cost = ConvLayers[-1].cost(y)
+
+    datasets = load_data()
+    train_dataset, valid_dataset, test_dataset = datasets
+    # train_set_x, train_set_y = train_dataset
+    # valid_set_x, valid_set_y = valid_dataset
+    np_test_set_x, np_test_set_y = test_dataset
+
+    # PREPROCESSING
+    test_scaled_x = preprocess(np_test_set_x, total_image_padding // 2)
+    test_set_x = theano.shared(np.asarray(test_scaled_x, dtype=theano.config.floatX), borrow=True)
+    #print('test_scaled_x', test_scaled_x)
+
+    construct_photo_predict = theano.function(
+        [index],
+        ConvLayers[-1].output,
+        givens={
+            x: test_set_x[index * batch_size: (index + 1) * batch_size]
+        }
+    )
+
+    photo_num = 0
+    loop = 0
+    while photo_num < 5:
+        img_batch = construct_photo_predict(loop)
+        for j in np.arange(batch_size):
+            if photo_num == 0:
+                print('output_img0: ', img_batch[j].transpose(1, 2, 0) * 256.)
+            cv2.imwrite(os.path.join(training_process_folder,
+                                     'photo' + str(photo_num) + '_predict.jpg'),
+                        img_batch[j].transpose(1, 2, 0) * 256.)
+            photo_num += 1
+            if photo_num == 5:
+                break
+        loop += 1
 
 
 if __name__ == '__main__':

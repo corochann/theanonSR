@@ -1,0 +1,38 @@
+{
+    "input_channel": 1, 
+    "layer_count": 5, 
+    "layers": [
+        {
+            "channel": 16, 
+            "filter_height": 3, 
+            "filter_width": 3, 
+            "learning_rate": 0.0009
+        }, 
+        {
+            "channel": 32, 
+            "filter_height": 3, 
+            "filter_width": 3, 
+            "learning_rate": 0.0006
+        }, 
+        {
+            "channel": 32, 
+            "filter_height": 3, 
+            "filter_width": 3, 
+            "learning_rate": 0.00036
+        }, 
+        {
+            "channel": 64, 
+            "filter_height": 3, 
+            "filter_width": 3, 
+            "learning_rate": 0.00036
+        }, 
+        {
+            "channel": 1, 
+            "filter_height": 3, 
+            "filter_width": 3, 
+            "learning_rate": 0.0002
+        }
+    ], 
+    "minibatch_size": 8, 
+    "rng_seed": 13266
+}
