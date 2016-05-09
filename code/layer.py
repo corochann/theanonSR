@@ -17,15 +17,11 @@ from theano.tensor.nnet import conv2d
 
 class ConvLayer(object):
     """ Convolution Layer
-
-    TODO
-    Note: this layer keeps the image height and width same for before input and after output.
     """
     def __init__(self, rng, input, filter_shape, image_shape, activation=None,
                  W_values=None, b_values=None,
-                 use_momentum=False, use_adam=False):
+                 use_adam=False):
         """
-
         :param rng: RandomState - random number generator
         :param input: dtensor4 (batch_size, #of input feature map, image height, image width)
         :param filter_shape: (W is filter) tuple/list of length 4
@@ -40,7 +36,6 @@ class ConvLayer(object):
                   set numpy.ndarray for specifying W_value (Trained value will be set here in Application phase)
                   [NOTE] self.b is theano.tensor.shared.var.TensorSharedVariable, but this b is numpy.adarray (only value)
                   1D array - (#of filters (output feature map), )
-        :param use_momentum: deprecated, should be always false. (True when use momentum)
         :param use_adam: deprecated, should be always True. (True when use ADAM)
         :return:
         """
@@ -71,16 +66,6 @@ class ConvLayer(object):
             b_values = np.zeros((filter_shape[0],), dtype=theano.config.floatX)
         self.b = theano.shared(value=b_values, borrow=True)
 
-        if use_momentum:
-            delta_W_values = np.zeros(filter_shape)
-            self.prev_W = theano.shared(
-                W_values,
-                borrow=True
-            )
-            self.delta_W = theano.shared(value=delta_W_values, borrow=True)
-            self.prev_b = theano.shared(value=b_values, borrow=True)
-            self.delta_b = theano.shared(value=b_values, borrow=True)  # for momentum
-
         if use_adam:
             zero_W_values = np.zeros(filter_shape)
             self.W_m = theano.shared(value=zero_W_values, borrow=False)
@@ -99,35 +84,23 @@ class ConvLayer(object):
             input_shape=image_shape
         )
 
+        conv_out_plus_b = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
         # TODO: consider activation
         # - sigmoid, tanh, LeRU (max(0, x)) etc.
-        #if activation is None:
-        #    activation = T.nnet.sigmoid
-        #self.output = activation(conv_out + self.b.dimshuffle('x', 0, 'x', 'x'))
-        # Normalization to 0-1. This is also Nonlinear activation
 
-        # relu: vanishing gradient occurs
+        # - relu: vanishing gradient occurs
         # self.output = T.minimum(T.maximum(0, conv_out + self.b.dimshuffle('x', 0, 'x', 'x')), 1)
 
-        # lrelu: leak rectified linear unit
-        # a = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
-        conv_out_plus_b = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
+        # - lrelu: leak rectified linear unit
+        # self.output = T.switch(T.lt(conv_out_plus_b, 0), -0.1*conv_out_plus_b, conv_out_plus_b) # LReLU
+
+        # - cropped leaky relu -> cropped to 0-1
         self.output = T.switch(T.lt(conv_out_plus_b, - 1179 / 256.), 0,
                                T.switch(T.lt(conv_out_plus_b, 1 / 256.), conv_out_plus_b / 1280. + 1279 / 327680.,
                                         T.switch(T.lt(conv_out_plus_b, 255 / 256.), conv_out_plus_b,
                                                  T.switch(T.lt(conv_out_plus_b, 1535 / 256.), conv_out_plus_b / 1280. + 326145. / 327680.,
                                                           1))))
-        #self.output = T.switch(T.lt(conv_out_plus_b, 0), 0, conv_out_plus_b)
-        # self.output = conv_out + self.b.dimshuffle('x', 0, 'x', 'x')
-
-        # self.output = conv_out
-        # self.output = self.b.dimshuffle('x', 0, 'x', 'x')
-
         self.params = [self.W, self.b]
-
-        if use_momentum:
-            self.prev_params = [self.prev_W, self.prev_b]
-            self.delta_params = [self.delta_W, self.delta_b]
 
         if use_adam:
             self.params_m = [self.W_m, self.b_m]
