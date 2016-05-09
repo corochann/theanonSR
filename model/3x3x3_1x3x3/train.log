@@ -1,0 +1,145 @@
+preprocess time 5 sec
+Training epoch 1 cost is 0.037460, took 0 min 33 sec
+epoch 2, minibatch 175/175, validation cost 0.028703
+     epoch 2, minibatch 175/175, test cost of best model 0.029851
+Training epoch 2 cost is 0.028271, took 0 min 30 sec
+Training epoch 3 cost is 0.026251, took 0 min 25 sec
+epoch 4, minibatch 175/175, validation cost 0.027000
+     epoch 4, minibatch 175/175, test cost of best model 0.027744
+Training epoch 4 cost is 0.025443, took 0 min 28 sec
+Training epoch 5 cost is 0.025000, took 0 min 27 sec
+epoch 6, minibatch 175/175, validation cost 0.026438
+     epoch 6, minibatch 175/175, test cost of best model 0.027156
+Training epoch 6 cost is 0.024742, took 0 min 29 sec
+Training epoch 7 cost is 0.024551, took 0 min 26 sec
+epoch 8, minibatch 175/175, validation cost 0.026097
+     epoch 8, minibatch 175/175, test cost of best model 0.026728
+Training epoch 8 cost is 0.024363, took 0 min 28 sec
+Training epoch 9 cost is 0.024176, took 0 min 25 sec
+epoch 10, minibatch 175/175, validation cost 0.025841
+     epoch 10, minibatch 175/175, test cost of best model 0.026512
+Training epoch 10 cost is 0.024068, took 0 min 28 sec
+Training epoch 11 cost is 0.023967, took 0 min 25 sec
+epoch 12, minibatch 175/175, validation cost 0.025605
+     epoch 12, minibatch 175/175, test cost of best model 0.026181
+Training epoch 12 cost is 0.023842, took 0 min 28 sec
+Training epoch 13 cost is 0.023726, took 0 min 25 sec
+epoch 14, minibatch 175/175, validation cost 0.025402
+     epoch 14, minibatch 175/175, test cost of best model 0.025938
+Training epoch 14 cost is 0.023621, took 0 min 28 sec
+Training epoch 15 cost is 0.023538, took 0 min 25 sec
+epoch 16, minibatch 175/175, validation cost 0.025253
+     epoch 16, minibatch 175/175, test cost of best model 0.025688
+Training epoch 16 cost is 0.023430, took 0 min 28 sec
+Training epoch 17 cost is 0.023336, took 0 min 25 sec
+epoch 18, minibatch 175/175, validation cost 0.025059
+     epoch 18, minibatch 175/175, test cost of best model 0.025667
+Training epoch 18 cost is 0.023242, took 0 min 28 sec
+Training epoch 19 cost is 0.023170, took 0 min 25 sec
+epoch 20, minibatch 175/175, validation cost 0.024896
+     epoch 20, minibatch 175/175, test cost of best model 0.025348
+Training epoch 20 cost is 0.023092, took 0 min 28 sec
+Training epoch 21 cost is 0.023019, took 0 min 24 sec
+epoch 22, minibatch 175/175, validation cost 0.024754
+     epoch 22, minibatch 175/175, test cost of best model 0.025189
+Training epoch 22 cost is 0.022960, took 0 min 28 sec
+Training epoch 23 cost is 0.022901, took 0 min 24 sec
+epoch 24, minibatch 175/175, validation cost 0.024611
+     epoch 24, minibatch 175/175, test cost of best model 0.025077
+Training epoch 24 cost is 0.022832, took 0 min 28 sec
+Training epoch 25 cost is 0.022758, took 0 min 24 sec
+epoch 26, minibatch 175/175, validation cost 0.024510
+     epoch 26, minibatch 175/175, test cost of best model 0.024909
+Training epoch 26 cost is 0.022671, took 0 min 28 sec
+Training epoch 27 cost is 0.022648, took 0 min 24 sec
+epoch 28, minibatch 175/175, validation cost 0.024481
+     epoch 28, minibatch 175/175, test cost of best model 0.025123
+Training epoch 28 cost is 0.022599, took 0 min 28 sec
+Training epoch 29 cost is 0.022549, took 0 min 25 sec
+epoch 30, minibatch 175/175, validation cost 0.024296
+     epoch 30, minibatch 175/175, test cost of best model 0.024684
+Training epoch 30 cost is 0.022503, took 0 min 28 sec
+Training epoch 31 cost is 0.022480, took 0 min 25 sec
+epoch 32, minibatch 175/175, validation cost 0.024199
+     epoch 32, minibatch 175/175, test cost of best model 0.024589
+Training epoch 32 cost is 0.022369, took 0 min 29 sec
+Training epoch 33 cost is 0.022384, took 0 min 26 sec
+epoch 34, minibatch 175/175, validation cost 0.024105
+     epoch 34, minibatch 175/175, test cost of best model 0.024525
+Training epoch 34 cost is 0.022328, took 0 min 29 sec
+Training epoch 35 cost is 0.022277, took 0 min 26 sec
+epoch 36, minibatch 175/175, validation cost 0.024042
+     epoch 36, minibatch 175/175, test cost of best model 0.024407
+Training epoch 36 cost is 0.022231, took 0 min 28 sec
+Training epoch 37 cost is 0.022199, took 0 min 25 sec
+epoch 38, minibatch 175/175, validation cost 0.023955
+     epoch 38, minibatch 175/175, test cost of best model 0.024386
+Training epoch 38 cost is 0.022179, took 0 min 28 sec
+Training epoch 39 cost is 0.022117, took 0 min 25 sec
+epoch 40, minibatch 175/175, validation cost 0.023920
+     epoch 40, minibatch 175/175, test cost of best model 0.024245
+Training epoch 40 cost is 0.022114, took 0 min 28 sec
+Training epoch 41 cost is 0.022077, took 0 min 24 sec
+epoch 42, minibatch 175/175, validation cost 0.023835
+     epoch 42, minibatch 175/175, test cost of best model 0.024293
+Training epoch 42 cost is 0.022054, took 0 min 28 sec
+Training epoch 43 cost is 0.021999, took 0 min 24 sec
+epoch 44, minibatch 175/175, validation cost 0.023807
+     epoch 44, minibatch 175/175, test cost of best model 0.024116
+Training epoch 44 cost is 0.021979, took 0 min 28 sec
+Training epoch 45 cost is 0.021992, took 0 min 24 sec
+epoch 46, minibatch 175/175, validation cost 0.023736
+     epoch 46, minibatch 175/175, test cost of best model 0.024211
+Training epoch 46 cost is 0.021919, took 0 min 28 sec
+Training epoch 47 cost is 0.021912, took 0 min 24 sec
+epoch 48, minibatch 175/175, validation cost 0.023673
+     epoch 48, minibatch 175/175, test cost of best model 0.024088
+Training epoch 48 cost is 0.021914, took 0 min 28 sec
+Training epoch 49 cost is 0.021836, took 0 min 24 sec
+epoch 50, minibatch 175/175, validation cost 0.023645
+     epoch 50, minibatch 175/175, test cost of best model 0.023967
+Training epoch 50 cost is 0.021853, took 0 min 28 sec
+Training epoch 51 cost is 0.021819, took 0 min 25 sec
+epoch 52, minibatch 175/175, validation cost 0.023590
+     epoch 52, minibatch 175/175, test cost of best model 0.023940
+Training epoch 52 cost is 0.021802, took 0 min 28 sec
+Training epoch 53 cost is 0.021776, took 0 min 25 sec
+epoch 54, minibatch 175/175, validation cost 0.023556
+     epoch 54, minibatch 175/175, test cost of best model 0.023889
+Training epoch 54 cost is 0.021755, took 0 min 28 sec
+Training epoch 55 cost is 0.021736, took 0 min 25 sec
+epoch 56, minibatch 175/175, validation cost 0.023512
+     epoch 56, minibatch 175/175, test cost of best model 0.023932
+Training epoch 56 cost is 0.021727, took 0 min 28 sec
+Training epoch 57 cost is 0.021708, took 0 min 25 sec
+epoch 58, minibatch 175/175, validation cost 0.023486
+     epoch 58, minibatch 175/175, test cost of best model 0.023929
+Training epoch 58 cost is 0.021709, took 0 min 28 sec
+Training epoch 59 cost is 0.021695, took 0 min 25 sec
+epoch 60, minibatch 175/175, validation cost 0.023488
+Training epoch 60 cost is 0.021692, took 0 min 27 sec
+Training epoch 61 cost is 0.021660, took 0 min 24 sec
+epoch 62, minibatch 175/175, validation cost 0.023415
+     epoch 62, minibatch 175/175, test cost of best model 0.023802
+Training epoch 62 cost is 0.021618, took 0 min 28 sec
+Training epoch 63 cost is 0.021643, took 0 min 24 sec
+epoch 64, minibatch 175/175, validation cost 0.023387
+     epoch 64, minibatch 175/175, test cost of best model 0.023778
+Training epoch 64 cost is 0.021637, took 0 min 28 sec
+Training epoch 65 cost is 0.021600, took 0 min 24 sec
+epoch 66, minibatch 175/175, validation cost 0.023361
+     epoch 66, minibatch 175/175, test cost of best model 0.023726
+Training epoch 66 cost is 0.021568, took 0 min 28 sec
+Training epoch 67 cost is 0.021568, took 0 min 24 sec
+epoch 68, minibatch 175/175, validation cost 0.023338
+     epoch 68, minibatch 175/175, test cost of best model 0.023688
+Training epoch 68 cost is 0.021589, took 0 min 28 sec
+Training epoch 69 cost is 0.021577, took 0 min 24 sec
+epoch 70, minibatch 175/175, validation cost 0.023384
+Training epoch 70 cost is 0.021564, took 0 min 27 sec
+Training epoch 71 cost is 0.021532, took 0 min 25 sec
+epoch 72, minibatch 175/175, validation cost 0.023335
+     epoch 72, minibatch 175/175, test cost of best model 0.023590
+Training epoch 72 cost is 0.021516, took 0 min 28 sec
+Training epoch 73 cost is 0.021496, took 0 min 25 sec
+epoch 74, minibatch 175

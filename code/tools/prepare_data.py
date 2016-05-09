@@ -126,21 +126,9 @@ def format_data(dataset):
     np_valid_data_y = data_y[train_index: valid_index]
     np_test_data_y = data_y[valid_index:]
 
-    def shared_dataset(data, borrow=True):
-        shared_data = theano.shared(np.asarray(data, dtype=theano.config.floatX), borrow=borrow)
-        return shared_data
-
-    theano_train_data_x = shared_dataset(np_train_data_x)
-    theano_valid_data_x = shared_dataset(np_valid_data_x)
-    theano_test_data_x = shared_dataset(np_test_data_x)
-    theano_train_data_y = shared_dataset(np_train_data_y)
-    theano_valid_data_y = shared_dataset(np_valid_data_y)
-    theano_test_data_y = shared_dataset(np_test_data_y)
-
-    return [(theano_train_data_x, theano_train_data_y),
-            (theano_valid_data_x, theano_valid_data_y),
-            (theano_test_data_x, theano_test_data_y)]
-
+    return [(np_train_data_x, np_train_data_y),
+            (np_valid_data_x, np_valid_data_y),
+            (np_test_data_x, np_test_data_y)]
 
 def load_data():
     dataset = build_data()

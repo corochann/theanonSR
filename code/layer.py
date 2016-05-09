@@ -106,7 +106,6 @@ class ConvLayer(object):
             self.params_m = [self.W_m, self.b_m]
             self.params_v = [self.W_v, self.b_v]
 
-
     def cost(self, y):
         """ calculating cost by Mean Squared Error (MSE) as the loss function
         NOTE: y and self.output must be same tensor size

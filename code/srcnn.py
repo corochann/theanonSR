@@ -1,16 +1,14 @@
-
-
+"""
+Inference twice scaled image using SRCNN
+"""
 
 from __future__ import print_function
-
 try:
     import cPickle as pickle
 except:
     import pickle as pickle
 
 import os
-import sys
-import timeit
 import cv2
 import json
 
@@ -18,19 +16,19 @@ import numpy as np
 import theano
 import theano.tensor as T
 
-from ConvLayer import ConvLayer
-from preprocess import nearest_neighbor_2x
-from image_processing.data_val import load_data
+from layer import ConvLayer
+from tools.image_processing import preprocess
+from tools.prepare_data import load_data
 
+model_name = '3x3x3_1x3x3'
 
 # Model
-training_model_folder = os.path.join('./model', '32x3x3_32x3x3_32x3x3_1x3x3/')
-#training_model_folder = './model/2x3x3_1x3x3/'
-# training_process_folder = training_model_folder + 'training_process/'
+filepath = os.path.dirname(os.path.realpath(__file__))
+training_model_folder = os.path.join(filepath, '../model', model_name)
 
-
-def predict(batch_size=4, image_height=232, image_width=232,
-            model_folder=training_model_folder):
+def predict_test_set(image_height=232,
+                     image_width=232,
+                     model_folder=training_model_folder):
     print('predict...')
     if not os.path.exists(model_folder):
         print('os.getcwd() ', os.getcwd())
@@ -96,11 +94,11 @@ def predict(batch_size=4, image_height=232, image_width=232,
     train_dataset, valid_dataset, test_dataset = datasets
     # train_set_x, train_set_y = train_dataset
     # valid_set_x, valid_set_y = valid_dataset
-    test_set_x, test_set_y = test_dataset
+    np_test_set_x, np_test_set_y = test_dataset
 
     # PREPROCESSING
-    test_scaled_x = nearest_neighbor_2x(test_set_x.get_value(), total_image_padding // 2)
-    test_set_x.set_value(test_scaled_x)
+    test_scaled_x = preprocess(np_test_set_x, total_image_padding // 2)
+    test_set_x = theano.shared(np.asarray(test_scaled_x, dtype=theano.config.floatX), borrow=True)
     #print('test_scaled_x', test_scaled_x)
 
     construct_photo_predict = theano.function(
@@ -111,23 +109,20 @@ def predict(batch_size=4, image_height=232, image_width=232,
         }
     )
 
-    img_batch1 = construct_photo_predict(1)
-    img_batch2 = construct_photo_predict(2)
-    # print('img_layer0.shape: ', img_layer0.shape)
-    # print('img_layer0: ', img_layer0)
-
-    # print('img_batch1.shape', img_batch1.shape)
-    # print('img_batch1: ', img_batch1)
-
-    img0 = img_batch1[0].transpose(1, 2, 0) * 256.
-    print('img0.shape', img0.shape)
-    print('img0: ', img0)
-    cv2.imwrite(os.path.join(training_process_folder, 'photo0_predict.jpg'), img0)
-    cv2.imwrite(os.path.join(training_process_folder, 'photo1_predict.jpg'), img_batch1[1].transpose(1, 2, 0) * 256.)
-    cv2.imwrite(os.path.join(training_process_folder, 'photo2_predict.jpg'), img_batch1[2].transpose(1, 2, 0) * 256.)
-    cv2.imwrite(os.path.join(training_process_folder, 'photo3_predict.jpg'), img_batch1[3].transpose(1, 2, 0) * 256.)
-    cv2.imwrite(os.path.join(training_process_folder, 'photo4_predict.jpg'), img_batch2[0].transpose(1, 2, 0) * 256.)
-    cv2.imwrite(os.path.join(training_process_folder, 'photo5_predict.jpg'), img_batch2[1].transpose(1, 2, 0) * 256.)
+    photo_num = 0
+    loop = 0
+    while photo_num < 5:
+        img_batch = construct_photo_predict(loop)
+        for j in np.arange(batch_size):
+            if photo_num == 0:
+                print('output_img0: ', img_batch[j].transpose(1, 2, 0) * 256.)
+            cv2.imwrite(os.path.join(training_process_folder,
+                                     'photo' + str(photo_num) + '_predict.jpg'),
+                        img_batch[j].transpose(1, 2, 0) * 256.)
+            photo_num += 1
+            if photo_num == 5:
+                break
+        loop += 1
 
 
 def srcnn2x(photo_file_path, model_folder=training_model_folder):
@@ -168,7 +163,6 @@ def srcnn2x(photo_file_path, model_folder=training_model_folder):
     # shape(batch_size, #of feature map, image height, image width)
 
     param_lists = pickle.load(open(os.path.join(model_folder, 'best_model.pkl')))
-    #print('param_lists', param_lists)
     #print('param_lists1', param_lists[1])
     #print('param_lists.shape', param_lists.shape)
     conv_layers = []
@@ -181,8 +175,8 @@ def srcnn2x(photo_file_path, model_folder=training_model_folder):
             previous_layer_channel = layers[i-1]["channel"]
             layer_input = conv_layers[-1].output
 
-        print('[DEBUG], i = %i, layers[i]["channel"] = %i, layers[i]["filter_height"] = %i, layers[i]["filter_width"] = %i' %
-              (i, layers[i]["channel"], layers[i]["filter_height"], layers[i]["filter_width"]))
+        # print('[DEBUG], i = %i, layers[i]["channel"] = %i, layers[i]["filter_height"] = %i, layers[i]["filter_width"] = %i' %
+        #       (i, layers[i]["channel"], layers[i]["filter_height"], layers[i]["filter_width"]))
         layer = ConvLayer(
             rng,
             input=layer_input,
@@ -202,7 +196,7 @@ def srcnn2x(photo_file_path, model_folder=training_model_folder):
 
     # data_scaled_x = np.empty((1, input_channel_number, output_image_height, output_image_width))
     # PREPROCESSING
-    data_scaled_x = nearest_neighbor_2x(data_prescaled_x, total_image_padding // 2)
+    data_scaled_x = preprocess(data_prescaled_x, total_image_padding // 2)
     input_x = theano.shared(np.asarray(data_scaled_x, dtype=theano.config.floatX), borrow=True)
 
     srcnn_photo_predict = theano.function(
