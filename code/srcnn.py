@@ -3,6 +3,7 @@ Inference twice scaled image using SRCNN
 """
 
 from __future__ import print_function
+import argparse
 try:
     import cPickle as pickle
 except:
@@ -22,13 +23,38 @@ from tools.prepare_data import load_data
 
 model_name = '3x3x3_1x3x3'
 
+# Parse
+parser = argparse.ArgumentParser(description=
+                                 'Super Resolution using Convolutional Neural Network with theano.\n'
+                                 'This upscales 2 times of size of input image, save to output image')
+parser.add_argument('input', help='path to input image')
+parser.add_argument('output', nargs='?', default=None, help='path to output image')
+parser.add_argument('--model', '-m', default=model_name, help='model (directory path)')
+parser.add_argument('--compare', '-c', default=False,
+                    help='compare flag. if set true, outputs xxx-conventional.jpg to compare the performance of xxx-theanonSR.jpg')
+args = parser.parse_args()
+
+if args.output == None:
+    file_name_with_ext = os.path.basename(args.input) # returns filename from path
+    filename_wo_ext, ext = os.path.splitext(file_name_with_ext)
+    output_file_path = os.path.join(os.path.dirname(args.input), filename_wo_ext + '-theanonSR.jpg')
+    conventional_file_path = os.path.join(os.path.dirname(args.input), filename_wo_ext + '-conventional.jpg')
+else:
+    file_name_with_ext = os.path.basename(args.output) # returns filename from path
+    filename_wo_ext, ext = os.path.splitext(file_name_with_ext)
+    output_file_path = args.output
+    conventional_file_path = os.path.join(os.path.dirname(args.output), filename_wo_ext + '-conventional.jpg')
+
+if args.model is not None:
+    model_name = args.model
+
 # Model
 filepath = os.path.dirname(os.path.realpath(__file__))
-training_model_folder = os.path.join(filepath, '../model', model_name)
+model_folder = os.path.join(filepath, '../model', model_name)
 
 def predict_test_set(image_height=232,
                      image_width=232,
-                     model_folder=training_model_folder):
+                     model_folder=model_folder):
     print('predict...')
     if not os.path.exists(model_folder):
         print('os.getcwd() ', os.getcwd())
@@ -125,7 +151,7 @@ def predict_test_set(image_height=232,
         loop += 1
 
 
-def srcnn2x(photo_file_path, model_folder=training_model_folder):
+def srcnn2x(photo_file_path, output_file_path, model_folder=model_folder, compare=False):
     print('srcnn2x: ', photo_file_path, ' with model ', model_folder)
     if not os.path.exists(model_folder):
         print('os.getcwd() ', os.getcwd())
@@ -208,27 +234,38 @@ def srcnn2x(photo_file_path, model_folder=training_model_folder):
     )
 
     output_img_y = srcnn_photo_predict()  # (ch, width, height)
-    print('output_img.shape', output_img_y.shape)
-    print('output_img: ', output_img_y)
+    #print('output_img.shape', output_img_y.shape)
+    #print('output_img: ', output_img_y)
 
     img0 = output_img_y[0].transpose(1, 2, 0) * 256. # (width, height, ch)
-    print('img0.shape', img0.shape)
-    print('img0: ', img0)
+    #print('img0.shape', img0.shape)
+    #print('img0: ', img0)
 
     scaled_input_img = cv2.resize(input_img, (output_image_width, output_image_height))
-    cv2.imwrite(os.path.join(model_folder, 'conventional.jpg'), scaled_input_img)
+    if compare:
+        cv2.imwrite(conventional_file_path, scaled_input_img)
 
     ycc_scaled_input_img = cv2.cvtColor(scaled_input_img, cv2.COLOR_BGR2YCR_CB)
     ycc_scaled_input_img[:, :, 0:1] = img0  # (width, height, ch)
     rgb_scaled_img = cv2.cvtColor(ycc_scaled_input_img, cv2.COLOR_YCR_CB2BGR)
-    cv2.imwrite(os.path.join(model_folder, 'srcnn_predict.jpg'), rgb_scaled_img)
+    cv2.imwrite(output_file_path, rgb_scaled_img)
 
 
 if __name__ == '__main__':
     #predict(model_folder=training_model_folder)
-    srcnn2x(photo_file_path='../data/small-320-cropped/attractive-beautiful-body-smiling-41248.jpeg',
-            model_folder=training_model_folder)
+    # input = '../data/small-320-cropped/attractive-beautiful-body-smiling-41248.jpeg'
+    input_file_path = args.input
+    if not os.path.exists(input_file_path):
+        print('Error: input file ', os.path.dirname(input_file_path), ' not exist')
+        exit()
 
+    if not os.path.exists(os.path.dirname(output_file_path)):
+        print('Error: output file directory ', os.path.dirname(output_file_path), ' not exist')
+        exit()
 
-
+    flag_compare = args.compare
+    srcnn2x(photo_file_path=input_file_path,
+            output_file_path=output_file_path,
+            model_folder=model_folder,
+            compare=flag_compare)
 
