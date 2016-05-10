@@ -1,4 +1,12 @@
 .idea/
-*.jpg
 data/prepare_data.log
 *.pyc
+data/*.jpg
+data/*/*.jpg
+model/*/*.jpg
+model/*/*/*.jpg
+
+!data/training_images/pexels-photo-87227-medium.jpg
+
+
+
