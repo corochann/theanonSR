@@ -4,6 +4,18 @@ Super Resolution using Deep Convolutional Neural Network(SRCNN) using theano
 ## Introduction
 theanonSR upscales photo image to x2 size.
 
+Original image
+
+![slide](https://raw.githubusercontent.com/corochann/theanonSR/master/assets/images/pexels-photo-87227-medium.jpg)
+
+Upscaled image using python OpenCV library
+
+![slide](https://raw.githubusercontent.com/corochann/theanonSR/master/assets/images/pexels-photo-87227-medium-conventional.jpg)
+
+**Upscaled image using theanonSR**
+
+![slide](https://raw.githubusercontent.com/corochann/theanonSR/master/assets/images/pexels-photo-87227-medium-theanonSR.jpg)
+
 
 ## Description
 
