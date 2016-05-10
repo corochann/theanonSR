@@ -13,6 +13,7 @@ import sys
 import timeit
 import cv2
 import json
+import argparse
 
 import numpy as np
 
@@ -25,9 +26,18 @@ from tools.image_processing import preprocess
 # from mlp import HiddenLayer
 from layer import ConvLayer
 
+# Default setting
 #model_name = '3x3x3_1x3x3'
 model_name = '16x3x3_32x3x3_32x3x3_64x3x3_1x3x3'
 # model_name = '32x3x3_32x3x3_32x3x3_1x3x3'
+
+# Parse
+parser = argparse.ArgumentParser(description='Training theanonSR')
+parser.add_argument('--model', '-m', default=model_name, help='model (directory name)')
+args = parser.parse_args()
+
+if args.model is not None:
+    model_name = args.model
 
 # Model
 filepath = os.path.dirname(os.path.realpath(__file__))
@@ -36,7 +46,7 @@ training_model_folder = os.path.join(filepath, '../model/', model_name)
 training_process_folder = os.path.join(training_model_folder, 'training_process')
 train_log_file_name = 'train.log'
 
-def execute_srcnn(n_epochs=40000,
+def execute_srcnn(n_epochs=1000,
                   image_height=232,
                   image_width=232,
                   resume=False):

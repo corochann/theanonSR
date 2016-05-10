@@ -19,9 +19,9 @@ import theano.tensor as T
 
 from layer import ConvLayer
 from tools.image_processing import preprocess
-from tools.prepare_data import load_data
 
-model_name = '3x3x3_1x3x3'
+# Default setting
+model_name = '16x3x3_32x3x3_32x3x3_64x3x3_1x3x3'
 
 # Parse
 parser = argparse.ArgumentParser(description=
@@ -29,7 +29,7 @@ parser = argparse.ArgumentParser(description=
                                  'It upscales input image 2x size, and save to output image')
 parser.add_argument('input', help='path to input image')
 parser.add_argument('output', nargs='?', default=None, help='path to output image')
-parser.add_argument('--model', '-m', default=model_name, help='model (directory path)')
+parser.add_argument('--model', '-m', default=model_name, help='model (directory name)')
 parser.add_argument('--compare', '-c', default=False,
                     help='compare flag. if set true, outputs xxx-conventional.jpg to compare the performance of xxx-theanonSR.jpg')
 args = parser.parse_args()
