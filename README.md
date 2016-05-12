@@ -49,21 +49,21 @@ Originally, I was inspired this project from waifu2x project, which uses Torch7 
 
 ### Basic usage
 Just specify image file path which you want to upscale.
-Ex. Upscaling input.jpg
 
+Ex. Upscaling input.jpg
 ```
 python code/srcnn.py input.jpg
 ```
 
 ### Specify output file name and path
 Ex. Upscaling /path/to/input.jpg to /path/to/output.jpg
-
 ```
 python code/srcnn.py /path/to/input.jpg /path/to/output.jpg
 ```
 
 ### Specify model to use:
-You can specify directory name in the /model directory, as the model.  
+You can specify directory name in the /model directory, as the model.
+
 Ex. use model 32x3x3_32x3x3_32x3x3_1x3x3,
 ```
 python code/srcnn.py -m 32x3x3_32x3x3_32x3x3_1x3x3 input.jpg
