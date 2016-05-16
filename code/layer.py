@@ -67,7 +67,7 @@ class ConvLayer(object):
         self.b = theano.shared(value=b_values, borrow=True)
 
         if use_adam:
-            zero_W_values = np.zeros(filter_shape)
+            zero_W_values = np.zeros(filter_shape, dtype=theano.config.floatX)
             self.W_m = theano.shared(value=zero_W_values, borrow=False)
             self.W_v = theano.shared(value=zero_W_values, borrow=False)
             self.b_m = theano.shared(value=b_values, borrow=False)

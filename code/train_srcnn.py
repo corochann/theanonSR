@@ -191,8 +191,8 @@ def execute_srcnn(n_epochs=1000,
     beta1 = 0.9
     beta2 = 0.999
     epsilon = 0.1  # 0.000001
-    beta1_t = theano.shared(value=0.0, borrow=True)
-    beta2_t = theano.shared(value=.9, borrow=True)
+    beta1_t = theano.shared(value=np.cast['float32'](0.0), borrow=True)  # Casting float32 is necessary for GPU usage
+    beta2_t = theano.shared(value=np.cast['float32'](.9), borrow=True)
 
     cost = ConvLayers[-1].cost(y)
 
@@ -221,7 +221,6 @@ def execute_srcnn(n_epochs=1000,
             y: train_set_y[indexes[index * batch_size: (index + 1) * batch_size]]
         }
     )
-
     # create a test function
     # TODO: implement error function (test evaluation function, e.g. PSNR), instead of using cost function
     test_model = theano.function(
