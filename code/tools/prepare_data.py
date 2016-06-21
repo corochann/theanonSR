@@ -86,7 +86,7 @@ def build_data(image_save_flag=False):
             # print transposed_y_img.shape  # (3, 420, 640) = (channel, height, width)
 
             # resize image half. NOTE: size order is (width, height)
-            half_img = cv2.resize(crop_img, (crop_width // 2, crop_height // 2))
+            half_img = cv2.resize(ycc_img, (crop_width // 2, crop_height // 2))
             # print half_img.shape
             if image_save_flag:
                 print('saving to ', os.path.join(half_directory, file))
